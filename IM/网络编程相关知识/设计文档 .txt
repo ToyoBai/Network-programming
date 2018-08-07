@@ -1,0 +1,206 @@
+--------------------------------------接口设计文档-------------------------------------------
+C->S统一入口：
+	
+S->C统一出口：
+	
+-------------------------------------数据库设计文档-----------------------------------------
+1.User表
+字段：
+	UserID：		用户ID[主键]
+	UserAccount：	用户账号
+	UserPassword：	用户密码
+	UserName：	用户昵称
+	UserPhoto：	用户头像
+	UserOnlineStatus：	用户在线状况	（0:离线；	1:在线）
+	UserFriendID：	用户好友ID
+
+2.Message表
+字段：
+	MessageSender：	消息发送者ID
+	MessageReceiver：	消息接收者ID
+	MessageSendTime：	消息发送时间
+	MessageReceiveTime：	消息接收时间
+	MessageFormat：	消息格式		（0:文本		1:图片		2:音频文件）
+	MessageRead：	消息读取情况	（0:未读		1:已读）
+
+
+-------------------------------------数据包设计文档-----------------------------------------
+requestID：
+	1.登录验证
+	2.注册验证
+	3.消息列表
+	4.好友搜索
+	5.好友添加
+
+responseID：
+	1.登录
+	2.注册
+	3.消息列表
+
+注：以下数据包格式皆为JSON格式。
+---------------------------------------------------------------------------------------------------
+1.login
+
+C->S：
+	{"requestID":"xxx","account":"xxx","password":"xxx"}
+
+说明：
+	requestID：	请求ID
+
+	account：	帐号
+
+	password：	密码
+
+S->C：
+	{"responseID":"xxx","result":"xxx","errorTip":"xxx"}
+说明：
+	responseID：	响应ID
+
+	result：		验证结果		（0：失败；	1：成功）
+
+（可选）errorTip：		错误提示		（"帐号或密码错误"；	"该账号已经登录"）
+
+注：
+	Client：传输账号、密码
+	Server：回传验证结果和错误提示
+
+---------------------------------------------------------------------------------------------------
+2.register
+
+C->S：
+	{"requestID":"xxx","account":"xxx","password":"xxx"}
+
+说明：
+	requestID：	请求ID
+
+	account：	帐号
+
+	password：	密码
+
+S->C：
+	{"responseID":"xxx","result":"xxx","errorTip":"xxx"}
+说明：
+	responseID：	响应ID
+
+	result：		验证结果		（0：失败；	1：成功）
+
+（可选）errorTip：		错误提示		（"输入不规范"；	"帐号已注册"）	
+
+注：
+	Client：传输账号、密码
+	Server：回传验证结果和错误提示
+
+--------------------------------------------------------------------------------------------------------------
+3.messageList：
+
+C->S：
+	{"requestID":"xxx","account":"xxx"}
+
+说明：
+	requestID：	请求ID
+	
+	account：	用户账号
+
+S->C：
+	{“friendName”:"xxx",“friendPhoto”:"xxx",“lastMessage”:"xxx",“lastTime”:"xxx"}
+说明：
+	friendName：	好友昵称
+
+	friendPhoto：	好友头像
+
+	lastMessage：	最后一条消息
+
+	lastTime：	最后一条消息的发送时间
+
+实现思路：
+	根据账号“筛选”出User表中account（账号）字段值 == 该账号的记录，获取其ID；
+	根据ID“筛选”出Message表中MessageReceiver字段值 == 该ID的记录；
+	对“筛选”结果再查询MessageRead字段，筛选出字段值为0（未读）的记录；
+	对“筛选”结果按MessageTime，进行排序，将最后一条消息推送给Client；
+注：
+	只有当用户点进单个好友聊天界面时，才会拉取该好友发送的所有未读消息（这属于聊天界面时的数据交互）
+
+--------------------------------------------------------------------------------------------------------------
+4.userSearch：
+
+C->S：
+	{"requestID":"xxx","accountOrName":"xxx"}
+说明：
+	requestID：	请求ID
+
+	accountOrName：	用户账号或昵称（String）
+
+S->C：
+	{"responseID":"xxx","result":"xxx"}
+说明：
+	responseID：	响应ID
+	
+	result：		搜索结果		（0：用户不存在；	1：用户存在）
+
+注：
+	本次交互的结果用于驱动好友添加的数据交互：仅当搜索到该用户时，才可以申请添加好友。
+--------------------------------------------------------------------------------------------------------------
+
+5.friendAdd
+C->S：
+	{"requestID":"xxx",“account”：“xxx”,"accountOrName":"xxx"}
+
+说明：
+	requestID：	请求ID
+	
+	account:	用户账号
+			
+	accountOrName：	用户账号或昵称（String）
+
+S->C：
+	{"responseID":"xxx","result":"xxx","errorTip":"xxx"}
+	
+	responseID：	响应ID
+	
+	result：		发送结果		（0：失败；	1：成功）
+
+ (可选)errorTip：		错误提示		（“用户拒绝添加好友”...）
+
+实现思路：
+	点击“加为好友”按钮，client将当前用户账号以及想要添加为好友的用户账号或昵称传输给server，server将推送给被添加用户一条“好友添加”消息，回传给client发送结果。如果失败附加错误提示。
+	而至于，被添加用户“同意”或者“拒绝”，应该另加载一个对话框。并需要另一次数据交互。
+--------------------------------------------------------------------------------------------------------------
+
+6.friendsList
+
+C->S：
+	{"requestID":"xxx","account":"xxx"}
+
+说明：
+	requestID：	请求ID
+	
+	account：	用户账号
+
+S->C：
+	{“friendName”:"xxx",“friendPhoto”:"xxx"}
+说明：
+	friendName：	好友昵称
+
+	friendPhoto：	好友头像
+
+注：
+	Client将当前用户账号传输给server，server根据账号在user表中查询该记录，并获取其UserFriendID字段值，
+--------------------------------------------------------------------------------------------------------------
+
+6.chat
+聊天包（C->S）：
+		请求id：
+		发送方：
+		接收方：
+		发送内容：
+聊天响应包（S->C）：
+		响应id：
+		发送结果：
+
+7.profileEdit
+个人资料包（C->S）：
+		请求id：
+		用户信息（头像、昵称）
+资料修改响应包（S->C）：
+		响应id：
+		修改结果
