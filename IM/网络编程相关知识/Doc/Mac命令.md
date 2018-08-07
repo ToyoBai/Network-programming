@@ -1,16 +1,9 @@
-## Ò»¡¢Ê²Ã´ÊÇToken
+1.æŸ¥çœ‹ç«¯å£å·å ç”¨æƒ…å†µ
 
-	tokenÊÇÓÃ»§Éí·ÝµÄÑéÖ¤·½Ê½£¬ÎÒÃÇÍ¨³£½ÐËü£ºÁîÅÆ¡£
-	×î¼òµ¥µÄtoken×é³É:uid(ÓÃ»§Î¨Ò»µÄÉí·Ý±êÊ¶)¡¢time(µ±Ç°Ê±¼äµÄÊ±¼ä´Á)¡¢sign(Ç©Ãû£¬ÓÉtokenµÄÇ°¼¸Î»+ÑÎÒÔ¹þÏ£Ëã·¨Ñ¹Ëõ³ÉÒ»¶¨³¤µÄÊ®Áù½øÖÆ×Ö·û´®£¬¿ÉÒÔ·ÀÖ¹¶ñÒâµÚÈý·½Æ´½ÓtokenÇëÇó·þÎñÆ÷)¡£»¹¿ÉÒÔ°Ñ²»±äµÄ²ÎÊýÒ²·Å½øtoken£¬±ÜÃâ¶à´Î²é¿â¡£
+	1.1 lsof		æ‰“å°æ‰€æœ‰å ç”¨ç«¯å£åˆ—è¡¨
+	1.2 lsof | less		åˆ†é¡µæ˜¾ç¤º
+	1.3 lsof -i:port	æŸ¥çœ‹æŸä¸ªç«¯å£æ˜¯å¦è¢«å ç”¨ (å¦‚æžœç«¯å£è¢«å ç”¨ï¼Œåˆ™ä¼šè¿”å›žç›¸å…³ä¿¡æ¯ï¼Œå¦‚æžœæ²¡è¢«å ç”¨ï¼Œåˆ™ä¸è¿”å›žä»»ä½•ä¿¡æ¯)
 
-## ¶þ¡¢TokenÑéÖ¤Á÷³Ì
+2.å…³é—­å ç”¨ç«¯å£
 
-	1.¿Í»§¶ËÊ¹ÓÃÓÃ»§Ãû¸úÃÜÂëÇëÇóµÇÂ¼
-	2.·þÎñ¶ËÊÕµ½ÇëÇó£¬È¥ÑéÖ¤ÓÃ»§ÃûÓëÃÜÂë
-	3.ÑéÖ¤³É¹¦ºó£¬·þÎñ¶Ë»áÇ©·¢Ò»¸ö Token£¬ÔÙ°ÑÕâ¸ö Token ·¢ËÍ¸ø¿Í»§¶Ë
-	4.¿Í»§¶ËÊÕµ½ Token ÒÔºó¿ÉÒÔ°ÑËü´æ´¢ÆðÀ´£¬±ÈÈç·ÅÔÚ Cookie Àï»òÕß Local Storage Àï
-	5.¿Í»§¶ËÃ¿´ÎÏò·þÎñ¶ËÇëÇó×ÊÔ´µÄÊ±ºòÐèÒª´ø×Å·þÎñ¶ËÇ©·¢µÄ Token
-	6.·þÎñ¶ËÊÕµ½ÇëÇó£¬È»ºóÈ¥ÑéÖ¤¿Í»§¶ËÇëÇóÀïÃæ´ø×ÅµÄ Token£¬Èç¹ûÑéÖ¤³É¹¦£¬¾ÍÏò¿Í»§¶Ë·µ»ØÇëÇóµÄÊý¾Ý
-	
-## Èý¡¢¼òÒ×Ê±ÐòÍ¼£¨»ùÓÚIM£©
-
+	2.1 kill PID		æ ¹æ®1.3èŽ·å¾—PIDï¼Œæ€æ­»ç›¸å…³è¿›ç¨‹
